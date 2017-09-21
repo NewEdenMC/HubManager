@@ -2,23 +2,27 @@ package co.neweden.HubManager.JumpPads;
 
 import co.neweden.HubManager.Util;
 import org.apache.commons.lang.Validate;
-import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.entity.EntityDamageEvent;
+import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.event.player.PlayerMoveEvent;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class JumpPads implements Listener {
 
     private Map<Block, JPadMeta> pads = new HashMap<>();
+    private Set<Player> jumpedPlayers = new HashSet<>();
 
     public JumpPads(Logger logger, ConfigurationSection config) {
         Validate.notNull(logger);
@@ -54,6 +58,17 @@ public class JumpPads implements Listener {
 
         Player player = event.getPlayer();
         player.setVelocity(player.getLocation().getDirection().setY(meta.y).multiply(meta.distance));
+        jumpedPlayers.add(player);
+    }
+
+    @EventHandler
+    public void onEntityDamage(EntityDamageEvent event) {
+        if (!(event.getEntity() instanceof Player) || event.getCause() != DamageCause.FALL) return;
+        Player player = (Player) event.getEntity();
+        if (jumpedPlayers.contains(player)) {
+            event.setDamage(0);
+            jumpedPlayers.remove(event.getEntity());
+        }
     }
 
 }
