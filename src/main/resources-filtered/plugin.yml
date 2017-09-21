@@ -1,0 +1,5 @@
+name: ${artifactId}
+version: ${version}
+description: Plugin to manage aspects of the Hub World on New Eden
+main: co.neweden.HubManager.Main
+author: AaronMcH

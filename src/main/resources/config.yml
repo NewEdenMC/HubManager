@@ -1,0 +1,5 @@
+jumpPads:
+  main1:
+    padLocation: world 5 64 5
+    height: 0.2
+    distance: 3
