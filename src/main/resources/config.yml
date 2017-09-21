@@ -1,3 +1,9 @@
+playerInventory:
+  preventItemPickup: false
+  preventItemDrop: false
+  preventMoveInOwnInventory: false
+  clearOnJoin: false
+
 preventFallingIntoVoid: false
 
 jumpPads:

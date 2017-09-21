@@ -16,6 +16,7 @@ public class Main extends JavaPlugin implements Listener {
     public void onEnable() {
         saveDefaultConfig();
         Bukkit.getPluginManager().registerEvents(new JumpPads(getLogger(), getConfig().getConfigurationSection("jumpPads")), this);
+        Bukkit.getPluginManager().registerEvents(new InventoryListener(getLogger(), getConfig().getConfigurationSection("playerInventory")), this);
         if (getConfig().getBoolean("preventFallingIntoVoid", false)) {
             Bukkit.getPluginManager().registerEvents(this, this);
             getLogger().info("Prevent Falling Into Void check enabled");
