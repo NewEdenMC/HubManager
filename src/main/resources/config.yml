@@ -11,3 +11,13 @@ jumpPads:
     padLocation: world 5 64 5
     height: 0.2
     distance: 3
+
+portals:
+  main:
+    worldName: world
+    pos1: 10 64 10
+    pos2: 15 69 10
+    teleportTo: world 0 64 0
+    menuToOpen: main
+    spawnOnMenuClose: false
+    hidePlayerWhileInMenu: false
