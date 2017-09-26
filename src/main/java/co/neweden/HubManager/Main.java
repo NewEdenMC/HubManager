@@ -17,9 +17,9 @@ import org.bukkit.plugin.java.JavaPlugin;
 public class Main extends JavaPlugin implements Listener {
 
     private Portals portals;
-    private boolean preventFallingIntoVoid = false;
-    private boolean preventPlayerDamage = false;
-    private boolean preventPlayerHunger = false;
+    private boolean preventFallingIntoVoid;
+    private boolean preventPlayerDamage;
+    private boolean preventPlayerHunger;
 
     @Override
     public void onEnable() {
@@ -29,14 +29,15 @@ public class Main extends JavaPlugin implements Listener {
         portals = new Portals(this, getConfig().getConfigurationSection("portals"));
         Bukkit.getPluginManager().registerEvents(portals, this);
         Bukkit.getPluginManager().registerEvents(this, this);
-        if (getConfig().getBoolean("preventFallingIntoVoid", false)) {
-            preventFallingIntoVoid = true;
-            getLogger().info("Prevent Falling Into Void check enabled");
-        }
-        if (getConfig().getBoolean("preventPlayerDamage", false)) {
-            preventPlayerDamage = true;
-            getLogger().info("Prevent Player Damage check enabled");
-        }
+
+        preventFallingIntoVoid = getConfig().getBoolean("preventFallingIntoVoid", false);
+        if (preventFallingIntoVoid) getLogger().info("Prevent Falling Into Void check enabled");
+
+        preventPlayerDamage = getConfig().getBoolean("preventPlayerDamage", false);
+        if (preventPlayerDamage) getLogger().info("Prevent Player Damage check enabled");
+
+        preventPlayerHunger = getConfig().getBoolean("preventPlayerHunger", false);
+        if (preventPlayerHunger) getLogger().info("Prevent Player Hunger check enabled");
     }
 
     @Override
