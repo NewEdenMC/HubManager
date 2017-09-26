@@ -19,16 +19,14 @@ import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerTeleportEvent.TeleportCause;
 import org.bukkit.plugin.Plugin;
 
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashSet;
+import java.util.*;
 import java.util.logging.Level;
 
 public class Portals implements Listener {
 
     private Collection<Portal> portals = new HashSet<>();
     private Plugin plugin;
-    private Collection<Player> playersInMenu = new HashSet<>();
+    private Map<Player, Location> playersInMenu = new HashMap<>();
 
     public Portals(Plugin plugin, ConfigurationSection config) {
         Validate.notNull(plugin);
@@ -45,12 +43,14 @@ public class Portals implements Listener {
                 continue;
             }
 
-            Location pos1; Location pos2; Location teleportTo = null;
+            Location pos1; Location pos2;
             try {
                 pos1 = Util.parseLocationFromString(portalConfig.getString("pos1", null), false);
                 pos2 = Util.parseLocationFromString(portalConfig.getString("pos2", null), false);
-                if (portalConfig.isString("teleportTo"))
-                    teleportTo = Util.parseLocationFromString(portalConfig.getString("teleportTo", null));
+                if (portalConfig.isString("teleportToOnEnter"))
+                    portal.teleportToOnEnter = Util.parseLocationFromString(portalConfig.getString("teleportToOnEnter", null));
+                if (portalConfig.isString("teleportToOnMenuClose"))
+                    portal.teleportToOnMenuClose = Util.parseLocationFromString(portalConfig.getString("teleportToOnMenuClose", null));
             } catch (IllegalArgumentException e) {
                 plugin.getLogger().log(Level.SEVERE, "An error occurred while loading Portal \"" + key + "\", continuing to the next Portal.", e);
                 continue;
@@ -58,8 +58,7 @@ public class Portals implements Listener {
 
             portal.x1 = pos1.getBlockX(); portal.y1 = pos1.getBlockY(); portal.z1 = pos1.getBlockZ();
             portal.x2 = pos2.getBlockX(); portal.y2 = pos2.getBlockY(); portal.z2 = pos2.getBlockZ();
-            portal.teleportTo = teleportTo;
-            portal.menuToOpen = portalConfig.getString("menuToOpen", null);
+            portal.menuToOpenOnEnter = portalConfig.getString("menuToOpenOnEnter", null);
             portal.spawnOnMenuClose = portalConfig.getBoolean("spawnOnMenuClose", false);
             portal.hidePlayerWhileInMenu = portalConfig.getBoolean("hidePlayerWhileInMenu", false);
 
@@ -78,15 +77,16 @@ public class Portals implements Listener {
                 block.getY() < portal.y1 || block.getY() > portal.y2 &&
                 block.getZ() < portal.z1 || block.getZ() > portal.z2) continue;
 
-            if (portal.teleportTo != null) event.getPlayer().teleport(portal.teleportTo, TeleportCause.PLUGIN);
+            if (portal.teleportToOnEnter != null) event.getPlayer().teleport(portal.teleportToOnEnter, TeleportCause.PLUGIN);
 
+            Menu menu = MenuGUI.getMenu(portal.menuToOpenOnEnter);
+            if (menu == null) return;
+            Location loc = portal.spawnOnMenuClose ? portal.world.getSpawnLocation() : portal.teleportToOnMenuClose;
             Bukkit.getScheduler().runTaskLater(plugin, new Runnable() {
                 @Override
                 public void run() {
-                    Menu menu = MenuGUI.getMenu(portal.menuToOpen);
-                    if (menu == null) return;
                     menu.openMenu(event.getPlayer());
-                    if (portal.spawnOnMenuClose) playersInMenu.add(event.getPlayer());
+                    playersInMenu.put(event.getPlayer(), loc);
                     if (portal.hidePlayerWhileInMenu) hidePlayer(event.getPlayer());
                 }
             }, 1);
@@ -96,14 +96,15 @@ public class Portals implements Listener {
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     public void onInventoryClose(InventoryCloseEvent event) {
         Player player = (Player) event.getPlayer();
-        if (!playersInMenu.contains(player)) return;
+        Location loc = playersInMenu.get(player);
+        if (loc == null) return; // the player should not be teleported
         playersInMenu.remove(player);
-        player.teleport(player.getWorld().getSpawnLocation(), TeleportCause.PLUGIN);
+        player.teleport(loc, TeleportCause.PLUGIN);
         showPlayer(player);
     }
 
     public void cleanup() {
-        for (Player player : Collections.unmodifiableCollection(playersInMenu)) {
+        for (Player player : Collections.unmodifiableCollection(playersInMenu.keySet())) {
             player.closeInventory();
             showPlayer(player);
         }
@@ -123,7 +124,7 @@ public class Portals implements Listener {
 
     @EventHandler
     public void onPlayerJoin(PlayerJoinEvent event) {
-        for (Player playerInMenu : Collections.unmodifiableCollection(playersInMenu)) {
+        for (Player playerInMenu : Collections.unmodifiableCollection(playersInMenu.keySet())) {
             event.getPlayer().hidePlayer(playerInMenu);
         }
     }

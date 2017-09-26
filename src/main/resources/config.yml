@@ -17,7 +17,8 @@ portals:
     worldName: world
     pos1: 10 64 10
     pos2: 15 69 10
-    teleportTo: world 0 64 0
-    menuToOpen: main
+    teleportToOnEnter: world 0 64 0
+    menuToOpenOnEnter: main
     spawnOnMenuClose: false
+    teleportToOnMenuClose: world 5 64 5
     hidePlayerWhileInMenu: false
