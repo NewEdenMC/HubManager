@@ -5,6 +5,8 @@ playerInventory:
   clearOnJoin: false
 
 preventFallingIntoVoid: false
+preventPlayerDamage: false
+preventPlayerHunger: false
 
 jumpPads:
   main1:
