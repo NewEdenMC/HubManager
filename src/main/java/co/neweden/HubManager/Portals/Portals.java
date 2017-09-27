@@ -56,8 +56,9 @@ public class Portals implements Listener {
                 continue;
             }
 
-            portal.x1 = pos1.getBlockX(); portal.y1 = pos1.getBlockY(); portal.z1 = pos1.getBlockZ();
-            portal.x2 = pos2.getBlockX(); portal.y2 = pos2.getBlockY(); portal.z2 = pos2.getBlockZ();
+            Location[] loc = Util.generateUntangledPoints(pos1, pos2);
+            portal.x1 = loc[0].getBlockX(); portal.y1 = loc[0].getBlockY(); portal.z1 = loc[0].getBlockZ();
+            portal.x2 = loc[1].getBlockX(); portal.y2 = loc[1].getBlockY(); portal.z2 = loc[1].getBlockZ();
             portal.menuToOpenOnEnter = portalConfig.getString("menuToOpenOnEnter", null);
             portal.spawnOnMenuClose = portalConfig.getBoolean("spawnOnMenuClose", false);
             portal.hidePlayerWhileInMenu = portalConfig.getBoolean("hidePlayerWhileInMenu", false);

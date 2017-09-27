@@ -50,4 +50,32 @@ public class Util {
         return loc;
     }
 
+    public static Location[] generateUntangledPoints(Location loc1, Location loc2) {
+        double x1; double y1; double z1;
+        double x2; double y2; double z2;
+
+        if (loc1.getX() <= loc2.getX()) {
+            x1 = loc1.getX(); x2 = loc2.getX();
+        } else {
+            x1 = loc2.getX(); x2 = loc1.getX();
+        }
+
+        if (loc1.getY() <= loc2.getY()) {
+            y1 = loc1.getY(); y2 = loc2.getY();
+        } else {
+            y1 = loc2.getY(); y2 = loc1.getY();
+        }
+
+        if (loc1.getZ() <= loc2.getZ()) {
+            z1 = loc1.getZ(); z2 = loc2.getZ();
+        } else {
+            z1 = loc2.getZ(); z2 = loc1.getZ();
+        }
+
+        Location[] loc = new Location[2];
+        loc[0] = new Location(loc1.getWorld(), x1, y1, z1, loc1.getYaw(), loc1.getPitch());
+        loc[1] = new Location(loc2.getWorld(), x2, y2, z2, loc2.getYaw(), loc2.getPitch());
+        return loc;
+    }
+
 }
