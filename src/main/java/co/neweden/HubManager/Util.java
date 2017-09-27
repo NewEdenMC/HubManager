@@ -78,4 +78,14 @@ public class Util {
         return loc;
     }
 
+    public static boolean isObjectColidingWithBox(Location object, Location pos1, Location pos2) {
+        Validate.notNull(object);
+        Validate.notNull(pos1);
+        Validate.notNull(pos2);
+        if (object.getBlockX() < pos1.getBlockX() || object.getBlockX() > pos2.getBlockX()) return false;
+        if (object.getBlockY() < pos1.getBlockY() || object.getBlockY() > pos2.getBlockY()) return false;
+        if (object.getBlockZ() < pos1.getBlockZ() || object.getBlockZ() > pos2.getBlockZ()) return false;
+        return true;
+    }
+
 }

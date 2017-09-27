@@ -57,8 +57,7 @@ public class Portals implements Listener {
             }
 
             Location[] loc = Util.generateUntangledPoints(pos1, pos2);
-            portal.x1 = loc[0].getBlockX(); portal.y1 = loc[0].getBlockY(); portal.z1 = loc[0].getBlockZ();
-            portal.x2 = loc[1].getBlockX(); portal.y2 = loc[1].getBlockY(); portal.z2 = loc[1].getBlockZ();
+            portal.pos1 = loc[0]; portal.pos2 = loc[1];
             portal.menuToOpenOnEnter = portalConfig.getString("menuToOpenOnEnter", null);
             portal.spawnOnMenuClose = portalConfig.getBoolean("spawnOnMenuClose", false);
             portal.hidePlayerWhileInMenu = portalConfig.getBoolean("hidePlayerWhileInMenu", false);
@@ -74,9 +73,7 @@ public class Portals implements Listener {
         if (block.getType() != Material.STATIONARY_WATER && block.getType() != Material.WATER) return;
 
         for (Portal portal : Collections.unmodifiableCollection(portals)) {
-            if (block.getX() < portal.x1 || block.getX() > portal.x2 &&
-                block.getY() < portal.y1 || block.getY() > portal.y2 &&
-                block.getZ() < portal.z1 || block.getZ() > portal.z2) continue;
+            if (!Util.isObjectColidingWithBox(event.getPlayer().getLocation(), portal.pos1, portal.pos2)) continue;
 
             if (portal.teleportToOnEnter != null) event.getPlayer().teleport(portal.teleportToOnEnter, TeleportCause.PLUGIN);
 
