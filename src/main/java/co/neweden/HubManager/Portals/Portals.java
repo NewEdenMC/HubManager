@@ -71,7 +71,7 @@ public class Portals implements Listener {
     @EventHandler
     public void onPlayerMove(PlayerMoveEvent event) {
         Block block = event.getPlayer().getLocation().getBlock();
-        if ((block.getType() != Material.STATIONARY_WATER && block.getType() != Material.WATER) || event.getFrom().getBlock().equals(event.getTo().getBlock())) return;
+        if (block.getType() != Material.STATIONARY_WATER && block.getType() != Material.WATER) return;
 
         for (Portal portal : Collections.unmodifiableCollection(portals)) {
             if (block.getX() < portal.x1 || block.getX() > portal.x2 &&
