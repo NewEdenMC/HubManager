@@ -8,6 +8,14 @@ preventFallingIntoVoid: false
 preventPlayerDamage: false
 preventPlayerHunger: false
 
+forceTime:
+  enabled: false
+  timeToForce: 6000
+
+forceWeather:
+  enabled: false
+  weatherToForce: SUN
+
 jumpPads:
   main1:
     padLocation: world 5 64 5

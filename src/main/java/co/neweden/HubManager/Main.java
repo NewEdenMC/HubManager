@@ -3,7 +3,9 @@ package co.neweden.HubManager;
 import co.neweden.HubManager.JumpPads.JumpPads;
 import co.neweden.HubManager.Portals.Portals;
 import org.bukkit.Bukkit;
+import org.bukkit.World;
 import org.bukkit.entity.Player;
+import org.bukkit.entity.Weather;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
@@ -20,6 +22,12 @@ public class Main extends JavaPlugin implements Listener {
     private boolean preventFallingIntoVoid;
     private boolean preventPlayerDamage;
     private boolean preventPlayerHunger;
+
+    private boolean forceTime;
+    private long timeToForce;
+
+    private boolean forceWeather;
+    private boolean forceWeatherStorm;
 
     @Override
     public void onEnable() {
@@ -38,11 +46,46 @@ public class Main extends JavaPlugin implements Listener {
 
         preventPlayerHunger = getConfig().getBoolean("preventPlayerHunger", false);
         if (preventPlayerHunger) getLogger().info("Prevent Player Hunger check enabled");
+
+        setEnvironmentForcing();
+    }
+
+    private void setEnvironmentForcing() {
+        forceTime = getConfig().getBoolean("forceTime.enabled", false);
+        if (forceTime) {
+            timeToForce = getConfig().getLong("forceTime.timeToForce", 6000);
+            getLogger().info("Forcing time to " + timeToForce + " ticks");
+        }
+
+        forceWeather = getConfig().getBoolean("forceWeather.enabled", false);
+        if (forceWeather) {
+            String weatherFromConfig = getConfig().getString("forceWeather.weatherToForce", "false");
+            switch (weatherFromConfig.toUpperCase()) {
+                case "SUN": forceWeatherStorm = false; break;
+                case "STORM": forceWeatherStorm = true; break;
+                default: forceWeather = false; getLogger().info("Tried to force weather but '" + weatherFromConfig + "' is not a valid value, valid values asre: SUN, STORM"); break;
+            }
+            if (forceWeather)
+                getLogger().info("Forcing weather to " + weatherFromConfig.toUpperCase());
+        }
+
+        if (!forceTime && !forceWeather) return;
+
+        Bukkit.getScheduler().runTaskTimer(this, new Runnable() {
+            @Override
+            public void run() {
+                for (World world : Bukkit.getWorlds()) {
+                    if (forceTime) world.setTime(timeToForce);
+                    if (forceWeather) world.setStorm(forceWeatherStorm);
+                }
+            }
+        }, 0, 20);
     }
 
     @Override
     public void onDisable() {
         HandlerList.unregisterAll((Plugin) this);
+        Bukkit.getScheduler().cancelTasks(this);
         portals.cleanup();
     }
 
