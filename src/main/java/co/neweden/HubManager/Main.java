@@ -61,6 +61,7 @@ public class Main extends JavaPlugin implements Listener {
                 getLogger().log(Level.SEVERE, "An error occurred while loading 'forceJoinLocation' from config.", e);
             }
         }
+        if (this.joinLocation != null) getLogger().info("Enabled forcing join location");
 
         setEnvironmentForcing();
     }
