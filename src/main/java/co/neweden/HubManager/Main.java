@@ -3,10 +3,12 @@ package co.neweden.HubManager;
 import co.neweden.HubManager.JumpPads.JumpPads;
 import co.neweden.HubManager.Portals.Portals;
 import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Weather;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageEvent;
@@ -15,6 +17,8 @@ import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
+
+import java.util.logging.Level;
 
 public class Main extends JavaPlugin implements Listener {
 
@@ -28,6 +32,8 @@ public class Main extends JavaPlugin implements Listener {
 
     private boolean forceWeather;
     private boolean forceWeatherStorm;
+
+    private Location joinLocation;
 
     @Override
     public void onEnable() {
@@ -46,6 +52,15 @@ public class Main extends JavaPlugin implements Listener {
 
         preventPlayerHunger = getConfig().getBoolean("preventPlayerHunger", false);
         if (preventPlayerHunger) getLogger().info("Prevent Player Hunger check enabled");
+
+        String joinLocation = getConfig().getString("forceJoinLocation.location", null);
+        if (joinLocation != null) {
+            try {
+                this.joinLocation = Util.parseLocationFromString(joinLocation);
+            } catch (IllegalArgumentException e) {
+                getLogger().log(Level.SEVERE, "An error occurred while loading 'forceJoinLocation' from config.", e);
+            }
+        }
 
         setEnvironmentForcing();
     }
@@ -97,10 +112,11 @@ public class Main extends JavaPlugin implements Listener {
             player.teleport(player.getWorld().getSpawnLocation());
     }
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     public void onPlayerJoin(PlayerJoinEvent event) {
         if (preventPlayerDamage) event.getPlayer().setHealth(20);
         if (preventPlayerHunger) event.getPlayer().setFoodLevel(20);
+        if (joinLocation != null) event.getPlayer().teleport(joinLocation);
     }
 
     @EventHandler

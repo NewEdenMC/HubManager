@@ -8,6 +8,10 @@ preventFallingIntoVoid: false
 preventPlayerDamage: false
 preventPlayerHunger: false
 
+forceJoinLocation:
+  enabled: false
+  location: world 0 64 0
+
 forceTime:
   enabled: false
   timeToForce: 6000
