@@ -3,6 +3,7 @@ package co.neweden.HubManager;
 import co.neweden.HubManager.JumpPads.JumpPads;
 import co.neweden.HubManager.Portals.Portals;
 import org.bukkit.Bukkit;
+import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
@@ -26,6 +27,7 @@ public class Main extends JavaPlugin implements Listener {
     private boolean preventFallingIntoVoid;
     private boolean preventPlayerDamage;
     private boolean preventPlayerHunger;
+    private boolean joinInAdventureMode;
 
     private boolean forceTime;
     private long timeToForce;
@@ -52,6 +54,9 @@ public class Main extends JavaPlugin implements Listener {
 
         preventPlayerHunger = getConfig().getBoolean("preventPlayerHunger", false);
         if (preventPlayerHunger) getLogger().info("Prevent Player Hunger check enabled");
+
+        joinInAdventureMode = getConfig().getBoolean("joinInAdventureMode", false);
+        if (joinInAdventureMode) getLogger().info("Enabled joining in Adventure Mode");
 
         String joinLocation = getConfig().getString("forceJoinLocation.location", null);
         if (joinLocation != null) {
@@ -117,6 +122,7 @@ public class Main extends JavaPlugin implements Listener {
     public void onPlayerJoin(PlayerJoinEvent event) {
         if (preventPlayerDamage) event.getPlayer().setHealth(20);
         if (preventPlayerHunger) event.getPlayer().setFoodLevel(20);
+        if (joinInAdventureMode) event.getPlayer().setGameMode(GameMode.ADVENTURE);
         if (joinLocation != null) event.getPlayer().teleport(joinLocation);
     }
 
