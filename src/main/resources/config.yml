@@ -22,6 +22,10 @@ forceWeather:
   enabled: false
   weatherToForce: SUN
 
+mobSpawning:
+  disabled: false
+  whitelist: []
+
 jumpPads:
   main1:
     padLocation: world 5 64 5

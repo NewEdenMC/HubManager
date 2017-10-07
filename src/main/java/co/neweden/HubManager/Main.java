@@ -6,6 +6,8 @@ import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.World;
+import org.bukkit.entity.EntityType;
+import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Weather;
 import org.bukkit.event.EventHandler;
@@ -14,12 +16,15 @@ import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBurnEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
+import org.bukkit.event.entity.EntitySpawnEvent;
 import org.bukkit.event.entity.FoodLevelChangeEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Level;
 
 public class Main extends JavaPlugin implements Listener {
@@ -38,6 +43,9 @@ public class Main extends JavaPlugin implements Listener {
     private boolean forceWeatherStorm;
 
     private Location joinLocation;
+
+    private boolean disableMobSpawning;
+    private List<EntityType> mobSpawningWhitelist = new ArrayList<>();
 
     @Override
     public void onEnable() {
@@ -74,6 +82,23 @@ public class Main extends JavaPlugin implements Listener {
         if (this.joinLocation != null) getLogger().info("Enabled forcing join location");
 
         setEnvironmentForcing();
+
+        disableMobSpawning = getConfig().getBoolean("mobSpawning.disabled", false);
+        if (disableMobSpawning) {
+            StringBuilder whitelist = new StringBuilder();
+            for (String mob : getConfig().getStringList("mobSpawning.whitelist")) {
+                String uMob = mob.toUpperCase();
+                try {
+                    EntityType eMob = EntityType.valueOf(uMob);
+                } catch (IllegalArgumentException e) {
+                    getLogger().warning("Error while parsing Mob Spawning Whitelist: " + uMob + " is not a valid Entity Type, continuing to next Mob in the list."); continue;
+                }
+                mobSpawningWhitelist.add(EntityType.valueOf(uMob));
+                whitelist.append(uMob); whitelist.append(", ");
+            }
+            if (whitelist.length() > 2) whitelist.delete(whitelist.length() - 2, whitelist.length());
+            getLogger().info("Mob Spawning disabled" + (whitelist.length() <= 0 ? ", the following mobs are on the whitelist: " + whitelist.toString() : ""));
+        }
     }
 
     private void setEnvironmentForcing() {
@@ -150,6 +175,12 @@ public class Main extends JavaPlugin implements Listener {
     @EventHandler(ignoreCancelled = true)
     public void onBlockBurn(BlockBurnEvent event) {
         if (preventBlockBurn) event.setCancelled(true);
+    }
+
+    @EventHandler(ignoreCancelled = true)
+    public void onEntitySpawn(EntitySpawnEvent event) {
+        if (disableMobSpawning && event.getEntity() instanceof LivingEntity && !mobSpawningWhitelist.contains(event.getEntityType()))
+            event.setCancelled(true);
     }
 
 }
