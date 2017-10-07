@@ -12,6 +12,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
+import org.bukkit.event.block.BlockBurnEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.FoodLevelChangeEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
@@ -27,6 +28,7 @@ public class Main extends JavaPlugin implements Listener {
     private boolean preventFallingIntoVoid;
     private boolean preventPlayerDamage;
     private boolean preventPlayerHunger;
+    private boolean preventBlockBurn;
     private boolean joinInAdventureMode;
 
     private boolean forceTime;
@@ -54,6 +56,9 @@ public class Main extends JavaPlugin implements Listener {
 
         preventPlayerHunger = getConfig().getBoolean("preventPlayerHunger", false);
         if (preventPlayerHunger) getLogger().info("Prevent Player Hunger check enabled");
+
+        preventBlockBurn = getConfig().getBoolean("preventBlockBurn", false);
+        if (preventBlockBurn) getLogger().info("Prevent Block Burn check enabled");
 
         joinInAdventureMode = getConfig().getBoolean("joinInAdventureMode", false);
         if (joinInAdventureMode) getLogger().info("Enabled joining in Adventure Mode");
@@ -140,6 +145,11 @@ public class Main extends JavaPlugin implements Listener {
             event.setCancelled(true);
             event.setFoodLevel(20);
         }
+    }
+
+    @EventHandler(ignoreCancelled = true)
+    public void onBlockBurn(BlockBurnEvent event) {
+        if (preventBlockBurn) event.setCancelled(true);
     }
 
 }
