@@ -2,6 +2,7 @@ package co.neweden.HubManager.JumpPads;
 
 import co.neweden.HubManager.Util;
 import org.apache.commons.lang.Validate;
+import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.configuration.ConfigurationSection;
@@ -11,6 +12,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.event.player.PlayerMoveEvent;
+import org.bukkit.util.Vector;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -44,6 +46,8 @@ public class JumpPads implements Listener {
             JPadMeta meta = new JPadMeta();
             meta.y = padConfig.getDouble("height", 0.2);
             meta.distance = padConfig.getInt("distance", 3);
+            meta.yaw = (float) padConfig.getDouble("yaw", 90);
+            meta.pitch = (float) padConfig.getDouble("pitch", 0);
             pads.put(pad, meta);
             logger.info("Loaded Jump Pad \"" + key + "\"");
         }
@@ -57,7 +61,10 @@ public class JumpPads implements Listener {
         if (meta == null) return; // Block is not a jump pad
 
         Player player = event.getPlayer();
-        player.setVelocity(player.getLocation().getDirection().setY(meta.y).multiply(meta.distance));
+        Location loc = player.getLocation();
+        loc.setYaw(meta.yaw);
+        loc.setPitch(meta.pitch);
+        player.setVelocity(loc.getDirection().setY(meta.y).multiply(meta.distance));
         jumpedPlayers.add(player);
     }
 
