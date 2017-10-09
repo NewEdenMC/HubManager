@@ -167,7 +167,7 @@ public class Main extends JavaPlugin implements Listener {
 
         if (args[0].equalsIgnoreCase("reload")) {
             try {
-                onDisable(); onEnable();
+                onDisable(); reloadConfig(); onEnable();
             } catch (Throwable ex) {
                 sender.sendMessage("\u00A7cAn exception was thrown while reloading Hub Manager, check console for more details.\n\u00A76Message: \u00A7c" + ex.getMessage());
                 throw ex;
