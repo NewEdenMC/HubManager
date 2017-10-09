@@ -97,12 +97,13 @@ public class Main extends JavaPlugin implements Listener {
             StringBuilder whitelist = new StringBuilder();
             for (String mob : getConfig().getStringList("mobSpawning.whitelist")) {
                 String uMob = mob.toUpperCase();
+                EntityType eMob;
                 try {
-                    EntityType eMob = EntityType.valueOf(uMob);
+                    eMob = EntityType.valueOf(uMob);
                 } catch (IllegalArgumentException e) {
                     getLogger().warning("Error while parsing Mob Spawning Whitelist: " + uMob + " is not a valid Entity Type, continuing to next Mob in the list."); continue;
                 }
-                mobSpawningWhitelist.add(EntityType.valueOf(uMob));
+                mobSpawningWhitelist.add(eMob);
                 whitelist.append(uMob); whitelist.append(", ");
             }
             if (whitelist.length() > 2) whitelist.delete(whitelist.length() - 2, whitelist.length());
