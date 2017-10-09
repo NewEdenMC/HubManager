@@ -6,6 +6,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.World;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
@@ -104,6 +105,10 @@ public class Main extends JavaPlugin implements Listener {
             if (whitelist.length() > 2) whitelist.delete(whitelist.length() - 2, whitelist.length());
             getLogger().info("Mob Spawning disabled" + (whitelist.length() <= 0 ? ", the following mobs are on the whitelist: " + whitelist.toString() : ""));
         }
+
+        ConfigurationSection fConfig = getConfig().getConfigurationSection("randomFireworks");
+        if (fConfig != null)
+            RandomFireworks.setupRandomFireworks(this, fConfig);
     }
 
     private void setEnvironmentForcing() {
