@@ -6,6 +6,9 @@ import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.World;
+import org.bukkit.command.Command;
+import org.bukkit.command.CommandException;
+import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;
@@ -148,6 +151,29 @@ public class Main extends JavaPlugin implements Listener {
         HandlerList.unregisterAll((Plugin) this);
         Bukkit.getScheduler().cancelTasks(this);
         portals.cleanup();
+    }
+
+    @Override
+    public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+        if (args.length == 0) {
+            sender.sendMessage(
+                    "\u00A7fHub Manager help commands:\n" +
+                    "\u00A73reload\u00A7f: Reload Hub Manager"
+            );
+            return true;
+        }
+
+        if (args[0].equalsIgnoreCase("reload")) {
+            try {
+                onDisable(); onEnable();
+            } catch (Throwable ex) {
+                sender.sendMessage("\u00A7cAn exception was thrown while reloading Hub Manager, check console for more details.\n\u00A76Message: \u00A7c" + ex.getMessage());
+                throw ex;
+            }
+            sender.sendMessage("\u00A7aReloaded Hub Manager, no unhandled exceptions were thrown, check console for any additional errors that weren't detected");
+        }
+
+        return true;
     }
 
     @EventHandler

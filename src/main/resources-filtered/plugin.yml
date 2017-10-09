@@ -4,3 +4,11 @@ description: Plugin to manage aspects of the Hub World on New Eden
 main: co.neweden.HubManager.Main
 author: AaronMcH
 depend: [MenuGUI]
+commands:
+   hubmanager:
+      description: Administrative command for Hub Manager
+      permission: hubmanager.admin
+permissions:
+   hubmanager.admin:
+      description: Gives access to Hub Manager admin commands
+      default: op
