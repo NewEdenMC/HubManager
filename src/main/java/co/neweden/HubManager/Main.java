@@ -19,6 +19,7 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBurnEvent;
+import org.bukkit.event.block.BlockIgniteEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntitySpawnEvent;
 import org.bukkit.event.entity.FoodLevelChangeEvent;
@@ -211,6 +212,11 @@ public class Main extends JavaPlugin implements Listener {
 
     @EventHandler(ignoreCancelled = true)
     public void onBlockBurn(BlockBurnEvent event) {
+        if (preventBlockBurn) event.setCancelled(true);
+    }
+
+    @EventHandler(ignoreCancelled = true)
+    public void onBlockIgnite(BlockIgniteEvent event) {
         if (preventBlockBurn) event.setCancelled(true);
     }
 
