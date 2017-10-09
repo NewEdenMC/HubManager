@@ -18,6 +18,7 @@ import org.bukkit.event.block.BlockBurnEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntitySpawnEvent;
 import org.bukkit.event.entity.FoodLevelChangeEvent;
+import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.plugin.Plugin;
@@ -35,6 +36,7 @@ public class Main extends JavaPlugin implements Listener {
     private boolean preventPlayerHunger;
     private boolean preventBlockBurn;
     private boolean joinInAdventureMode;
+    private boolean preventPlayerInteract;
 
     private boolean forceTime;
     private long timeToForce;
@@ -70,6 +72,9 @@ public class Main extends JavaPlugin implements Listener {
 
         joinInAdventureMode = getConfig().getBoolean("joinInAdventureMode", false);
         if (joinInAdventureMode) getLogger().info("Enabled joining in Adventure Mode");
+
+        preventPlayerInteract = getConfig().getBoolean("preventPlayerInteract", false);
+        if (preventPlayerInteract) getLogger().info("Prevent Player Interact check enabled");
 
         String joinLocation = getConfig().getString("forceJoinLocation.location", null);
         if (joinLocation != null) {
@@ -181,6 +186,11 @@ public class Main extends JavaPlugin implements Listener {
     public void onEntitySpawn(EntitySpawnEvent event) {
         if (disableMobSpawning && event.getEntity() instanceof LivingEntity && !mobSpawningWhitelist.contains(event.getEntityType()))
             event.setCancelled(true);
+    }
+
+    @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
+    public void onPlayerInteract(PlayerInteractEvent event) {
+        if (preventPlayerInteract) event.setCancelled(true);
     }
 
 }

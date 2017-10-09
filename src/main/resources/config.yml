@@ -8,7 +8,9 @@ preventFallingIntoVoid: false
 preventPlayerDamage: false
 preventPlayerHunger: false
 preventBlockBurn: false
+
 joinInAdventureMode: false
+preventPlayerInteract: false
 
 forceJoinLocation:
   enabled: false
