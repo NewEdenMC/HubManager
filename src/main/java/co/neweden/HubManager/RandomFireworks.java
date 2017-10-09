@@ -61,6 +61,7 @@ class RandomFireworks {
                 .withColor(getColor(random.nextInt(17) + 1))
                 .withFade(getColor(random.nextInt(17) + 1))
                 .with(Type.values()[random.nextInt(Type.values().length)])
+                .flicker(false)
                 .trail(random.nextBoolean()).build();
 
         fMeta.addEffect(effect);
