@@ -1,7 +1,7 @@
 package co.neweden.HubManager.JumpPads;
 
 import co.neweden.HubManager.Util;
-import org.apache.commons.lang.Validate;
+import com.sun.istack.internal.NotNull;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -26,9 +26,9 @@ public class JumpPads implements Listener {
     private Map<Block, JPadMeta> pads = new HashMap<>();
     private Set<Player> jumpedPlayers = new HashSet<>();
 
-    public JumpPads(Logger logger, ConfigurationSection config) {
-        Validate.notNull(logger);
-        Validate.notNull(config);
+    public JumpPads(@NotNull Logger logger, ConfigurationSection config) {
+        if (config == null) return;
+
         logger.info("Loading Jump Pads");
         for (String key : config.getKeys(false)) {
             ConfigurationSection padConfig = config.getConfigurationSection(key);

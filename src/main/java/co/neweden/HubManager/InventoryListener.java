@@ -1,6 +1,6 @@
 package co.neweden.HubManager;
 
-import org.apache.commons.lang.Validate;
+import com.sun.istack.internal.NotNull;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -19,9 +19,8 @@ public class InventoryListener implements Listener {
     private boolean preventMove;
     private boolean clearOnJoin;
 
-    public InventoryListener(Logger logger, ConfigurationSection config) {
-        Validate.notNull(logger);
-        Validate.notNull(config);
+    public InventoryListener(@NotNull Logger logger, ConfigurationSection config) {
+        if (config == null) return;
 
         preventPickup = config.getBoolean("preventItemPickup", false);
         if (preventPickup) logger.info("Enabled Item Pickup restrictions.");

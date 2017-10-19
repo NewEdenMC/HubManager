@@ -3,7 +3,7 @@ package co.neweden.HubManager.Portals;
 import co.neweden.HubManager.Util;
 import co.neweden.menugui.MenuGUI;
 import co.neweden.menugui.menu.Menu;
-import org.apache.commons.lang.Validate;
+import com.sun.istack.internal.NotNull;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -28,9 +28,8 @@ public class Portals implements Listener {
     private Plugin plugin;
     private Map<Player, Location> playersInMenu = new HashMap<>();
 
-    public Portals(Plugin plugin, ConfigurationSection config) {
-        Validate.notNull(plugin);
-        Validate.notNull(config);
+    public Portals(@NotNull Plugin plugin, ConfigurationSection config) {
+        if (config == null) return;
 
         this.plugin = plugin;
         for (String key : config.getKeys(false)) {
