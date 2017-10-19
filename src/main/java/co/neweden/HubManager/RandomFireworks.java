@@ -1,6 +1,6 @@
 package co.neweden.HubManager;
 
-import org.apache.commons.lang3.Validate;
+import com.sun.istack.internal.NotNull;
 import org.bukkit.Bukkit;
 import org.bukkit.Color;
 import org.bukkit.FireworkEffect;
@@ -28,9 +28,7 @@ class RandomFireworks {
 
     private Location location;
 
-    private RandomFireworks(Plugin plugin, String name, ConfigurationSection config) {
-        Validate.notNull(plugin);
-        Validate.notNull(config);
+    private RandomFireworks(@NotNull Plugin plugin, @NotNull String name, @NotNull ConfigurationSection config) {
 
         String location = config.getString("location", null);
         if (location == null) {
