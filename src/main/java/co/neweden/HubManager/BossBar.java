@@ -2,6 +2,7 @@ package co.neweden.HubManager;
 
 import com.sun.istack.internal.NotNull;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.boss.BarColor;
 import org.bukkit.boss.BarFlag;
 import org.bukkit.boss.BarStyle;
@@ -11,18 +12,22 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.plugin.Plugin;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class BossBar implements Listener {
 
     private org.bukkit.boss.BossBar bar;
-    private List<String> messages;
+    private List<String> messages = new ArrayList<>();
     private int currentMessageIndex = 0;
 
     public BossBar(@NotNull Plugin plugin, ConfigurationSection config) {
         if (config == null || !config.getBoolean("enabled", false)) return;
-        messages = config.getStringList("messages");
-        if (messages.size() <= 0) return;
+        List<String> rawMessages = config.getStringList("messages");
+        if (rawMessages.size() <= 0) return;
+        for (String message : rawMessages) {
+            messages.add(ChatColor.translateAlternateColorCodes('&', message));
+        }
 
         BarColor colour = BarColor.PURPLE;
         BarStyle style = BarStyle.SOLID;
