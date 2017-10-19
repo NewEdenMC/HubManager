@@ -52,3 +52,13 @@ randomFireworks:
   location1:
     location: world 20 64 20
     delayBetweenFirework: 5
+
+bossBar:
+  enabled: false
+  numberOfTicksBetweenMessages: 200
+  barColour: PURPLE
+  barStyle: SOLID
+  barProgress: 1.0
+  messages:
+  - "&aWelcome"
+  - "&eHello"

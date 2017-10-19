@@ -54,6 +54,8 @@ public class Main extends JavaPlugin implements Listener {
     private boolean disableMobSpawning;
     private List<EntityType> mobSpawningWhitelist = new ArrayList<>();
 
+    private BossBar bossBar;
+
     @Override
     public void onEnable() {
         saveDefaultConfig();
@@ -114,6 +116,8 @@ public class Main extends JavaPlugin implements Listener {
         ConfigurationSection fConfig = getConfig().getConfigurationSection("randomFireworks");
         if (fConfig != null)
             RandomFireworks.setupRandomFireworks(this, fConfig);
+
+        bossBar = new BossBar(this, getConfig().getConfigurationSection("bossBar"));
     }
 
     private void setEnvironmentForcing() {
@@ -153,6 +157,7 @@ public class Main extends JavaPlugin implements Listener {
         HandlerList.unregisterAll((Plugin) this);
         Bukkit.getScheduler().cancelTasks(this);
         portals.cleanup();
+        bossBar.cleanup();
     }
 
     @Override
