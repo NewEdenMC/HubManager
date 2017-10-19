@@ -3,7 +3,6 @@ package co.neweden.HubManager.Portals;
 import co.neweden.HubManager.Util;
 import co.neweden.menugui.MenuGUI;
 import co.neweden.menugui.menu.Menu;
-import com.sun.istack.internal.NotNull;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -19,6 +18,7 @@ import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerTeleportEvent.TeleportCause;
 import org.bukkit.plugin.Plugin;
 
+import javax.validation.constraints.NotNull;
 import java.util.*;
 import java.util.logging.Level;
 

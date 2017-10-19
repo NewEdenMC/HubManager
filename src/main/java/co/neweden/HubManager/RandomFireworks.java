@@ -1,6 +1,5 @@
 package co.neweden.HubManager;
 
-import com.sun.istack.internal.NotNull;
 import org.bukkit.Bukkit;
 import org.bukkit.Color;
 import org.bukkit.FireworkEffect;
@@ -12,6 +11,7 @@ import org.bukkit.FireworkEffect.Type;
 import org.bukkit.inventory.meta.FireworkMeta;
 import org.bukkit.plugin.Plugin;
 
+import javax.validation.constraints.NotNull;
 import java.util.Random;
 
 class RandomFireworks {
